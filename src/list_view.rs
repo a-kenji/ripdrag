@@ -11,8 +11,8 @@ use gtk::{
 
 use crate::file_object::FileObject;
 use crate::util::{
-    drag_source_and_exit, generate_content_provider, generate_file_model, setup_drag_source_all,
-    setup_drop_target, ListWidget,
+    drag_source_and_exit, drag_source_and_print_path, generate_content_provider,
+    generate_file_model, setup_drag_source_all, setup_drop_target, ListWidget,
 };
 use crate::{ARGS, CURRENT_DIRECTORY};
 
@@ -77,9 +77,28 @@ fn create_drag_source(row: &CenterBox, selection: &MultiSelection) -> DragSource
         }));
     }
 
+    if ARGS.get().unwrap().and_print {
+        drag_source.connect_drag_end(
+           clone!(@weak row, @weak selection, => @default-return (), move |_, _, _| {
+           let row_file = get_file(&row).path().unwrap();
+           println!("{}", &row_file.display());
+    }),
+        );
+    }
+
+    if ARGS.get().unwrap().and_print_uri {
+        drag_source.connect_drag_end(
+           clone!(@weak row, @weak selection, => @default-return (), move |_, _, _| {
+           let row_file = get_file(&row).uri().to_string();
+           println!("{:}", &row_file);
+    }),
+        );
+    }
+
     if ARGS.get().unwrap().and_exit {
         drag_source_and_exit(&drag_source);
     }
+
     drag_source
 }
 

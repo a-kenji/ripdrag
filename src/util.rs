@@ -4,6 +4,9 @@ use gtk::glib::{clone, Bytes};
 use gtk::prelude::*;
 use gtk::{gdk, glib, DragSource, DropTarget, EventSequenceState, Widget};
 
+use std::path::Path;
+use std::path::PathBuf;
+
 use crate::file_object::FileObject;
 use crate::ARGS;
 
@@ -161,5 +164,21 @@ pub fn setup_drop_target(model: &ListStore, widget: &Widget) {
 pub fn drag_source_and_exit(drag_source: &DragSource) {
     drag_source.connect_drag_end(|_, _, _| {
         std::process::exit(0);
+    });
+}
+
+pub fn drag_source_and_print_path(drag_source: &DragSource, path: PathBuf) {
+    drag_source.connect_drag_end(move |_, _, _| {
+        println!("{}", &path.display());
+    });
+}
+
+pub fn drag_source_and_print_uri_from_path(drag_source: &DragSource, path: &Path) {
+    drag_source.connect_drag_end(|_, _, _| {
+        //   if let Ok(uri) = std::str::from_utf8(&generate_uri_from_path(&path)) {
+        //     println!("{uri}");
+        //     } else {
+        //     eprintln!("Could not provide uri for path: {}", &path.display());
+        //     }
     });
 }

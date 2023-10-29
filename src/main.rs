@@ -39,6 +39,14 @@ struct Cli {
     #[arg(short = 'x', long)]
     and_exit: bool,
 
+    /// Print paths that have been dragged successully
+    #[arg(long)]
+    and_print: bool,
+
+    /// Print uri of paths that have been dragged successully
+    #[arg(long)]
+    and_print_uri: bool,
+
     /// Only display icons, no labels
     #[arg(short, long)]
     icons_only: bool,
